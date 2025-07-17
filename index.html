@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>counter App</title>
+    <link rel="stylesheet" href="counter.css">
+
+</head>
+<body>
+    <div class="container counter">
+        <h1>COUNTER :</h1>
+        <div class="count">0</div>
+        <button class="increment" onclick="increment()">increment(++)</button>
+        <button class="decrement" onclick="decrement()">Decrement(--)</button>
+        <button class="reset" onclick="reset()">Reset</button>
+    </div>
+    <!-- .length>.heght> -->
+
+    <div class="container">
+        <h1>TIMER :</h1>
+         <div class="timer">00:00:00</div>
+         <div class="btn_contaner">
+            <button class="start">start</button>
+            <button class="stop">stop</button>
+            <button class="treset">Reset</button>
+
+         </div>
+
+        </div>
+     
+<script>
+
+        let count=0;
+
+    function update(){
+        document.querySelector('.count').innerText=count;
+    }
+    function increment(){
+        count++;
+        update();
+    }
+    function decrement(){
+        count--;
+        update();
+    }
+
+    function reset(){
+        count=0;
+        update();
+    }
+    //timer
+    //variavles
+
+    const interval_ms=1000/60;
+    let timerID;
+    let Lstarttime=0;
+    let milliElapsedBeforeLastStart=0;
+
+    const timer=document.querySelector('.timer');
+    const start_btn=document.querySelector('.start');
+    const stop_btn=document.querySelector('.stop');
+    const reset_btn=document.querySelector('.treset');
+
+    start_btn.addEventListener("click",startTimer);
+    stop_btn.addEventListener("click",stopTimer);
+    reset_btn.addEventListener("click",resetTimer);
+    //creating functions
+    //1.start
+    function startTimer(){
+        start_btn.disabled=true;
+        stop_btn.disabled=false;
+        reset_btn.disabled=true;
+        Lstarttime=Date.now();
+        timerID=setInterval(updateTimer,interval_ms);
+
+    }
+    //2.stop
+    function stopTimer(){
+        start_btn.disabled=false;
+        stop_btn.disabled=true;
+        reset_btn.disabled=false;
+        milliElapsedBeforeLastStart +=Date.now() - Lstarttime;
+        clearInterval(timerID);
+    }
+
+
+    //3.reset
+    function resetTimer(){
+        reset_btn.disabled=false;
+        timer.textContent="00:00:00";
+        milliElapsedBeforeLastStart=0;
+
+    }
+
+    //4.update
+    function updateTimer(){
+        const milliElapsed=Date.now() -Lstarttime + milliElapsedBeforeLastStart;
+        const secondsElapsed=milliElapsed/1000;
+        const minutsElapsed=secondsElapsed/60;
+
+        const millisText=formatTimer(milliElapsed%1000,3);
+        const secondsText=formatTimer(Math.floor(secondsElapsed%60,2));
+        const minutsText=formatTimer(Math.floor(minutsElapsed),2);
+        timer.textContent = `${minutsText}:${secondsText}:${millisText}`;
+
+
+    }
+    //5.formate number
+    function formatTimer(number,desiredLength){
+        const stringNumber=String(number);
+        if(stringNumber.length>desiredLength){
+            return stringNumber.slice(0,desiredLength);
+
+        }
+        return stringNumber.padStart(desiredLength,"0");
+    }
+
+
+
+</script>
+
+</body>
+</html>
